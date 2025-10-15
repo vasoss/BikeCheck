@@ -3,6 +3,8 @@
 package com.vasos.bikecheck_bot.controller;
 
 import com.vasos.bikecheck_bot.dto.BikeDto;
+import com.vasos.bikecheck_bot.dto.CustomBikeDto;
+import com.vasos.bikecheck_bot.dto.InstallComponentDto;
 import com.vasos.bikecheck_bot.entity.Bike;
 import com.vasos.bikecheck_bot.service.BikeService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +33,20 @@ public class BikeController {
                            @PathVariable Long userId){
         return bikeService.createBike(name,userId);
     }
+
+    @PostMapping("/{bikeId}/install")
+    public void installComponent(@PathVariable Long bikeId,
+                                 @RequestBody InstallComponentDto component){
+
+        bikeService.installComponent(bikeId, component);
+    }
+
+    @PostMapping("/create/custom")
+    public Bike createCustomBike(@PathVariable Long userId,
+                                 @RequestBody CustomBikeDto customBikeDto){
+        return bikeService.createCustomBike(userId, customBikeDto);
+    }
+
 
     @GetMapping("/{id}")
     public Bike getBikeById(@PathVariable Long id){
