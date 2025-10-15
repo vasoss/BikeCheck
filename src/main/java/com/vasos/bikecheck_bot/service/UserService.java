@@ -1,5 +1,6 @@
 package com.vasos.bikecheck_bot.service;
 
+import com.vasos.bikecheck_bot.dto.UserDto;
 import com.vasos.bikecheck_bot.entity.Bike;
 import com.vasos.bikecheck_bot.entity.User;
 import com.vasos.bikecheck_bot.repository.UserRepository;
@@ -24,16 +25,14 @@ public class UserService {
     }
 
 
-
-
-
-    public User createUser(Long id, String name){
-        if(userRepository.existsById(id)){
-            return userRepository.findById(id).get();
+    public User createUser(UserDto userDto){
+        if(userRepository.existsById(userDto.getId())){
+            return userRepository.findById(userDto.getId()).get();
         }
-
-        User newUser = new User(id,name);
-        return userRepository.save(newUser);
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+        return userRepository.save(user);
     }
 
     public List<User> getAllUsers(){
