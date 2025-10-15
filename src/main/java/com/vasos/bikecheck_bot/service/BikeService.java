@@ -3,6 +3,8 @@
 package com.vasos.bikecheck_bot.service;
 
 import com.vasos.bikecheck_bot.dto.BikeDto;
+import com.vasos.bikecheck_bot.dto.CustomBikeDto;
+import com.vasos.bikecheck_bot.dto.InstallComponentDto;
 import com.vasos.bikecheck_bot.entity.Bike;
 import com.vasos.bikecheck_bot.entity.User;
 import com.vasos.bikecheck_bot.repository.BikeRepository;
@@ -17,12 +19,33 @@ public class BikeService {
 
     private final BikeRepository bikeRepository;
     private final UserService userService;
+    private final ComponentService componentService;
 
     @Autowired
-    public BikeService(BikeRepository bikeRepository, UserService userService){
+    public BikeService(BikeRepository bikeRepository, UserService userService, ComponentService componentService){
         this.bikeRepository = bikeRepository;
         this.userService = userService;
+        this.componentService = componentService;
     }
+
+    public Bike createCustomBike(Long userId, CustomBikeDto dto){
+        Bike bike = new Bike(dto.getName());
+        User user = userService.getUserById(userId);
+        bike.setUser(user);
+        bike.setPrice(0);
+        bike.setInvest(0);
+        user.setBikesCount(user.getBikesCount()+1);
+        return bikeRepository.save(bike);
+    }
+
+    public void installComponent(Long id, InstallComponentDto dto){
+        Bike bike = getById(id);
+        componentService.createComponent(bike,dto.getCategory(), dto.getName(), dto.getPrice());
+        bike.addPrice(dto.getPrice());
+    }
+
+
+
 
     public void setPrice(Long bikeId, Integer bikePrice){
         getById(bikeId).setPrice(bikePrice);
