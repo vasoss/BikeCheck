@@ -14,13 +14,16 @@ public class Finance {
     @JoinColumn(name = "bike_id")
     private Bike bike;
 
+    @Column(name = "descripton")
+    private String description;
+
     @Column(name = "type")
     private String type;
 
     @Column(name = "purchase_price")
     private Integer purchasePrice;
 
-    private Finance(){}
+    public Finance(){}
 
     public Long getId() {
         return id;
@@ -52,5 +55,13 @@ public class Finance {
 
     public void setPurchasePrice(Integer purchasePrice) {
         this.purchasePrice = purchasePrice;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }
