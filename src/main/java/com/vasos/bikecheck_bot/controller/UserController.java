@@ -1,5 +1,6 @@
 package com.vasos.bikecheck_bot.controller;
 
+import com.vasos.bikecheck_bot.dto.UserDto;
 import com.vasos.bikecheck_bot.entity.User;
 import com.vasos.bikecheck_bot.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +19,8 @@ public class UserController {
     }
 
     @PostMapping
-    public User createUser(@RequestBody Long id,
-                           @RequestBody String name){
-        return userService.createUser(id,name);
+    public User createUser(@RequestBody UserDto userDto){
+        return userService.createUser(userDto);
     }
 
     @GetMapping("/{userId}")
