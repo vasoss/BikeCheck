@@ -15,7 +15,7 @@ public class Component {
     private String name;
 
     @Column(name = "price")
-    private Double price;
+    private Integer price;
 
     @Column(name = "category")
     private String category;
@@ -29,7 +29,7 @@ public class Component {
 
     public Component(){}
 
-    public Component(String name, Double price, String category){
+    public Component(String name, Integer price, String category){
         this.name = name;
         this.price = price;
         this.category = category;
@@ -49,10 +49,10 @@ public class Component {
         this.name = name;
     }
 
-    public Double getPrice(){
+    public Integer getPrice(){
         return price;
     }
-    public void setPrice(Double price){
+    public void setPrice(Integer price){
         this.price = price;
     }
 
