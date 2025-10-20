@@ -2,16 +2,16 @@
 
 package com.vasos.bikecheck_bot.service;
 
-import com.vasos.bikecheck_bot.dto.BikeDto;
-import com.vasos.bikecheck_bot.dto.CustomBikeDto;
-import com.vasos.bikecheck_bot.dto.InstallComponentDto;
+import com.vasos.bikecheck_bot.dto.*;
 import com.vasos.bikecheck_bot.entity.Bike;
 import com.vasos.bikecheck_bot.entity.User;
 import com.vasos.bikecheck_bot.repository.BikeRepository;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -38,11 +38,43 @@ public class BikeService {
         return bikeRepository.save(bike);
     }
 
+    public Bike createStockBike(Long userId, StockBikeDto dto){
+        Bike bike = new Bike();
+        User user = userService.getUserById(userId);
+        bike.setName(dto.getName());
+        bike.setPrice(dto.getPrice());
+        bike.setInvest(0);
+        bike.setUser(user);
+        user.setBikesCount(user.getBikesCount()+1);
+        return bikeRepository.save(bike);
+    }
+
     public void installComponent(Long id, InstallComponentDto dto){
         Bike bike = getById(id);
-        componentService.createComponent(bike,dto.getCategory(), dto.getName(), dto.getPrice());
-        bike.addPrice(dto.getPrice());
+        componentService.createComponent(bike,dto);
+        //addPrice(id, dto.getPrice());
+        bikeRepository.save(getById(id));
     }
+
+
+    public void installComponentList(Long id, ComponentListDto componentList){
+        Bike bike = getById(id);
+        Integer componentSum = 0;
+        String[] components = componentList.getComponentList().split("\n");
+        for(String component : components){
+            String[] part = component.split(",");
+            String partType = part[0].trim();
+            String partName = String.join(",",Arrays.copyOfRange(part,1,part.length-1)).trim();
+            Integer partPrice = Integer.parseInt(part[part.length-1].replaceAll(" ",""));
+            InstallComponentDto dto = new InstallComponentDto(partType,partName,partPrice);
+            componentService.createComponent(bike,dto);
+            componentSum += partPrice;
+        }
+        bike.addPrice(componentSum);
+        bikeRepository.save(bike);
+    }
+
+
 
 
 
@@ -53,8 +85,8 @@ public class BikeService {
     public Integer getPrice(Long bikeId){
         return  getById(bikeId).getPrice();
     }
-    public void addPrice(Long bikeId, Integer price){
-        getById(bikeId).addPrice(price);
+    public void addPrice(Bike bike, Integer price){
+        bike.addPrice(price);
     }
     public void subtractPrice(Long bikeId, Integer price){
         getById(bikeId).subtractPrice(price);
