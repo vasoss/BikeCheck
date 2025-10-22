@@ -21,6 +21,30 @@ public class BikeController {
         this.bikeService = bikeService;
     }
 
+    @PostMapping("/create/custom")
+    public Bike createCustomBike(@PathVariable Long userId,
+                                 @RequestBody CustomBikeDto dto){
+        return bikeService.createCustomBike(userId, dto);
+    }
+
+    @PostMapping("/create/stock")
+    public Bike createStockBike(@PathVariable Long userId,
+                                @RequestBody StockBikeDto dto){
+        return bikeService.createStockBike(userId, dto);
+    }
+
+    @PostMapping("/{bikeId}/edit/install")
+    public void editInstallComponentList(@PathVariable Long bikeId,
+                                     @RequestBody ComponentListDto dto){
+        bikeService.editInstallComponentList(bikeId,dto);
+    }
+
+    @DeleteMapping("/{bikeId}/edit/delete")
+    public void editDeleteComponentList(@PathVariable Long bikeId,
+                                        @RequestBody editDeleteComponentListDto dto){
+        bikeService.editDeleteComponentList(bikeId,dto);
+    }
+
     @GetMapping
     public List<BikeDto> getUserBikes(@PathVariable Long userId){
         return bikeService.getUserBikes(userId);
@@ -36,24 +60,6 @@ public class BikeController {
     public void installComponent(@PathVariable Long bikeId,
                                  @RequestBody InstallComponentDto component){
         bikeService.installComponent(bikeId, component);
-    }
-
-    @PostMapping("/{bikeId}/install/list")
-    public void installComponentList(@PathVariable Long bikeId,
-                                     @RequestBody ComponentListDto dto){
-        bikeService.installComponentList(bikeId,dto);
-    }
-
-    @PostMapping("/create/custom")
-    public Bike createCustomBike(@PathVariable Long userId,
-                                 @RequestBody CustomBikeDto dto){
-        return bikeService.createCustomBike(userId, dto);
-    }
-
-    @PostMapping("/create/stock")
-    public Bike createStockBike(@PathVariable Long userId,
-                                @RequestBody StockBikeDto dto){
-        return bikeService.createStockBike(userId, dto);
     }
 
 

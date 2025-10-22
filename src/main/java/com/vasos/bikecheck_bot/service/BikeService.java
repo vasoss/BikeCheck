@@ -57,7 +57,7 @@ public class BikeService {
     }
 
 
-    public void installComponentList(Long id, ComponentListDto componentList){
+    public void editInstallComponentList(Long id, ComponentListDto componentList){
         Bike bike = getById(id);
         Integer componentSum = 0;
         String[] components = componentList.getComponentList().split("\n");
@@ -70,12 +70,23 @@ public class BikeService {
             componentService.createComponent(bike,dto);
             componentSum += partPrice;
         }
-        bike.addPrice(componentSum);
+        bike.adjustPrice(+componentSum);
         bikeRepository.save(bike);
     }
 
-
-
+    public void editDeleteComponentList(Long id, editDeleteComponentListDto dto){
+        Bike bike = getById(id);
+        Integer componentSum = 0;
+        String[] components = dto.getComponentList().split(",");
+        for(String component : components){
+            String componentType = component.toLowerCase().trim();
+            Integer price = componentService.getComponentPriceByType(componentType,id);
+            componentSum += price;
+            componentService.deleteComponentByType(componentType,id);
+        }
+        bike.adjustPrice(-componentSum);
+        bikeRepository.save(bike);
+    }
 
 
 
@@ -85,12 +96,7 @@ public class BikeService {
     public Integer getPrice(Long bikeId){
         return  getById(bikeId).getPrice();
     }
-    public void addPrice(Bike bike, Integer price){
-        bike.addPrice(price);
-    }
-    public void subtractPrice(Long bikeId, Integer price){
-        getById(bikeId).subtractPrice(price);
-    }
+
 
     public void setInvest(Long bikeId, Integer bikeInvest){
         getById(bikeId).setInvest(bikeInvest);
