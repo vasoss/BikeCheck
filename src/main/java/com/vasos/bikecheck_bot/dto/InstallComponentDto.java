@@ -3,14 +3,14 @@ package com.vasos.bikecheck_bot.dto;
 public class InstallComponentDto {
 
     private String name;
-    private String category;
+    private String type;
     private Integer price;
 
     public InstallComponentDto(){}
 
-    public InstallComponentDto(String name, String category, Integer price){
+    public InstallComponentDto(String type, String name, Integer price){
+        this.type = type;
         this.name = name;
-        this.category = category;
         this.price = price;
     }
 
@@ -22,12 +22,12 @@ public class InstallComponentDto {
         this.name = name;
     }
 
-    public String getCategory() {
-        return category;
+    public String getType() {
+        return type;
     }
 
-    public void setCategory(String category) {
-        this.category = category;
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Integer getPrice() {

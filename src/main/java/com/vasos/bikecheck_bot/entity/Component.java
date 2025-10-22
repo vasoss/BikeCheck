@@ -17,8 +17,8 @@ public class Component {
     @Column(name = "price")
     private Integer price;
 
-    @Column(name = "category")
-    private String category;
+    @Column(name = "type")
+    private String type;
 
     @ManyToOne(fetch = FetchType.LAZY)  //Связь с велосипедом (многие компоненты к одному велосипеду)
     @JoinColumn(name = "bike_id")
@@ -29,10 +29,10 @@ public class Component {
 
     public Component(){}
 
-    public Component(String name, Integer price, String category){
+    public Component(String type, String name, Integer price){
         this.name = name;
         this.price = price;
-        this.category = category;
+        this.type = type;
     }
 
     public Long getId(){
@@ -56,11 +56,11 @@ public class Component {
         this.price = price;
     }
 
-    public String getCategory(){
-        return category;
+    public String getType(){
+        return type;
     }
-    public void setCategory(String category){
-        this.category = category;
+    public void setType(String category){
+        this.type = category;
     }
 
     public Bike getBike(){
