@@ -1,5 +1,6 @@
 package com.vasos.bikecheck_bot.service;
 
+import com.vasos.bikecheck_bot.dto.InstallComponentDto;
 import com.vasos.bikecheck_bot.entity.Bike;
 import com.vasos.bikecheck_bot.entity.Component;
 import com.vasos.bikecheck_bot.repository.ComponentRepository;
@@ -12,17 +13,15 @@ import java.util.List;
 public class ComponentService {
 
     private final ComponentRepository componentRepository;
-    private final BikeService bikeService;
+
 
     @Autowired
-    public ComponentService(ComponentRepository componentRepository, BikeService bikeService){
+    public ComponentService(ComponentRepository componentRepository){
         this.componentRepository = componentRepository;
-        this.bikeService = bikeService;
     }
 
-    public Component createComponent(String name, Double price, String category, Long bikeId){
-        Bike bike = bikeService.getById(bikeId);
-        Component component = new Component(name,price,category);
+    public Component createComponent(Bike bike, InstallComponentDto dto){
+        Component component = new Component(dto.getType(), dto.getName(), dto.getPrice());
         component.setBike(bike);
         return componentRepository.save(component);
     }
@@ -35,8 +34,14 @@ public class ComponentService {
         return componentRepository.findByNameAndBikeId(name,bikeId);
     }
 
-    public void deleteComponent(String name, Long bikeId){
-        componentRepository.delete(findComponentByName(name, bikeId));
+    public void deleteComponentByType(String type, Long bikeId){
+        Component component = componentRepository.findByTypeAndBikeId(type,bikeId);
+        componentRepository.delete(component);
+    }
+
+    public Integer getComponentPriceByType(String type, Long bikeId){
+        Component component = componentRepository.findByTypeAndBikeId(type,bikeId);
+        return component.getPrice();
     }
 
 
