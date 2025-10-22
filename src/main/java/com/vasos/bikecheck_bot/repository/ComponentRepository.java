@@ -10,5 +10,5 @@ import java.util.List;
 public interface ComponentRepository extends JpaRepository<Component, Long> {
     List<Component> findByBikeId(Long bikeId);
     Component findByNameAndBikeId(String name, Long bikeId);
-
+    Component findByTypeAndBikeId(String type, Long bikeId);
 }
