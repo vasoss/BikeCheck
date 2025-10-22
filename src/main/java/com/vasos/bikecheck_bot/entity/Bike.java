@@ -74,11 +74,8 @@ public class Bike {
     public Integer getPrice(){
         return price;
     }
-    public void addPrice(Integer price){
+    public void adjustPrice(Integer price){
         this.price += price;
-    }
-    public void subtractPrice(Integer price){
-        this.price -= price;
     }
 
     public void setInvest(Integer invest){
