@@ -20,7 +20,7 @@ public class ComponentService {
         this.componentRepository = componentRepository;
     }
 
-    public Component createComponent(Bike bike, InstallComponentDto dto){
+    public Component installComponent(Bike bike, InstallComponentDto dto){
         Component component = new Component(dto.getType(), dto.getName(), dto.getPrice());
         component.setBike(bike);
         return componentRepository.save(component);
@@ -42,6 +42,11 @@ public class ComponentService {
     public Integer getComponentPriceByType(String type, Long bikeId){
         Component component = componentRepository.findByTypeAndBikeId(type,bikeId);
         return component.getPrice();
+    }
+
+    public Component checkComponentMatching(Long bikeId, String type){
+        Component component = componentRepository.findByTypeAndBikeId(type,bikeId);
+        return component;
     }
 
 
