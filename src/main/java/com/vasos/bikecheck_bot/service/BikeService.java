@@ -4,6 +4,7 @@ package com.vasos.bikecheck_bot.service;
 
 import com.vasos.bikecheck_bot.dto.*;
 import com.vasos.bikecheck_bot.entity.Bike;
+import com.vasos.bikecheck_bot.entity.Component;
 import com.vasos.bikecheck_bot.entity.User;
 import com.vasos.bikecheck_bot.repository.BikeRepository;
 import jakarta.transaction.Transactional;
@@ -20,12 +21,14 @@ public class BikeService {
     private final BikeRepository bikeRepository;
     private final UserService userService;
     private final ComponentService componentService;
+    private final FinanceService financeService;
 
     @Autowired
-    public BikeService(BikeRepository bikeRepository, UserService userService, ComponentService componentService){
+    public BikeService(BikeRepository bikeRepository, UserService userService, ComponentService componentService, FinanceService financeService){
         this.bikeRepository = bikeRepository;
         this.userService = userService;
         this.componentService = componentService;
+        this.financeService = financeService;
     }
 
     public Bike createCustomBike(Long userId, CustomBikeDto dto){
@@ -51,13 +54,13 @@ public class BikeService {
 
     public void installComponent(Long id, InstallComponentDto dto){
         Bike bike = getById(id);
-        componentService.createComponent(bike,dto);
+        componentService.installComponent(bike,dto);
         //addPrice(id, dto.getPrice());
         bikeRepository.save(getById(id));
     }
 
 
-    public void editInstallComponentList(Long id, ComponentListDto componentList){
+    public void editInstallComponentList(Long id, EditInstallComponentListDto componentList){
         Bike bike = getById(id);
         Integer componentSum = 0;
         String[] components = componentList.getComponentList().split("\n");
@@ -67,14 +70,14 @@ public class BikeService {
             String partName = String.join(",",Arrays.copyOfRange(part,1,part.length-1)).trim();
             Integer partPrice = Integer.parseInt(part[part.length-1].replaceAll(" ",""));
             InstallComponentDto dto = new InstallComponentDto(partType,partName,partPrice);
-            componentService.createComponent(bike,dto);
+            componentService.installComponent(bike,dto);
             componentSum += partPrice;
         }
         bike.adjustPrice(+componentSum);
         bikeRepository.save(bike);
     }
 
-    public void editDeleteComponentList(Long id, editDeleteComponentListDto dto){
+    public void editDeleteComponentList(Long id, EditDeleteComponentListDto dto){
         Bike bike = getById(id);
         Integer componentSum = 0;
         String[] components = dto.getComponentList().split(",");
@@ -88,7 +91,19 @@ public class BikeService {
         bikeRepository.save(bike);
     }
 
-
+    @Transactional
+    public Component upgradeInstallComponent(Long id, InstallComponentDto dto){
+        Component oldComponent = componentService.checkComponentMatching(id,dto.getType());
+        if(oldComponent == null){
+            Bike bike = getById(id);
+            bike.adjustPrice(dto.getPrice());
+            bike.adjustInvest(dto.getPrice());
+            financeService.installTransaction(bike, dto.getPrice(), dto.getName(), dto.getType());
+            return componentService.installComponent(bike,dto);
+        }else{
+            return oldComponent;
+        }
+    }
 
     public void setPrice(Long bikeId, Integer bikePrice){
         getById(bikeId).setPrice(bikePrice);
@@ -97,19 +112,6 @@ public class BikeService {
         return  getById(bikeId).getPrice();
     }
 
-
-    public void setInvest(Long bikeId, Integer bikeInvest){
-        getById(bikeId).setInvest(bikeInvest);
-    }
-    public Integer getInvest(Long bikeId){
-        return getById(bikeId).getInvest();
-    }
-    public void addInvest(Long bikeId, Integer invest){
-        getById(bikeId).addInvest(invest);
-    }
-    public void subtractInvest(Long bikeId, Integer invest){
-        getById(bikeId).subtractInvest(invest);
-    }
 
 
     public Bike createBike(String name, Long userId){
