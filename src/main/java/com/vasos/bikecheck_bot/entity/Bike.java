@@ -34,7 +34,9 @@ public class Bike {
     @JsonManagedReference
     private List<Component> components = new ArrayList<>();
 
-
+    @OneToMany(mappedBy = "bike", cascade = CascadeType.ALL)
+    @JsonManagedReference
+    private List<Finance> finances = new ArrayList<>();
 
 
 
@@ -84,12 +86,10 @@ public class Bike {
     public Integer getInvest(){
         return invest;
     }
-    public void addInvest(Integer invest){
+    public void adjustInvest(Integer invest){
         this.invest += invest;
     }
-    public void subtractInvest(Integer invest){
-        this.invest -= invest;
-    }
+
 
 
 
