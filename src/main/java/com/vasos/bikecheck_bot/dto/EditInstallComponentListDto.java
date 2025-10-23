@@ -1,12 +1,12 @@
 package com.vasos.bikecheck_bot.dto;
 
-public class editDeleteComponentListDto {
+public class EditInstallComponentListDto {
 
     private String componentList;
 
-    public editDeleteComponentListDto(){}
+    public EditInstallComponentListDto(){}
 
-    public editDeleteComponentListDto(String componentList){
+    public EditInstallComponentListDto(String componentList){
         this.componentList = componentList;
     }
 
