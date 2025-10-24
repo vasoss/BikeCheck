@@ -23,6 +23,9 @@ public class Finance {
     @Column(name = "purchase_price")
     private Integer purchasePrice;
 
+    @Column(name = "sell_price")
+    private Integer sellPrice;
+
     public Finance(){}
 
     public Long getId() {
@@ -63,5 +66,13 @@ public class Finance {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Integer getSellPrice() {
+        return sellPrice;
+    }
+
+    public void setSellPrice(Integer sellPrice) {
+        this.sellPrice = sellPrice;
     }
 }
