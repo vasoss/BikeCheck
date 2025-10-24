@@ -21,11 +21,19 @@ public class FinanceService {
         Finance transaction = new Finance();
         transaction.setPurchasePrice(price);
         transaction.setType("BUY");
-        transaction.setDescription("Покупка : " + componentType + " - " + componentName);
+        transaction.setDescription("Покупка : " + componentType + " " + componentName);
         transaction.setBike(bike);
         financeRepository.save(transaction);
     }
 
+    public void uninstallTransaction(Bike bike, Integer price, String componentName, String componentType){
+        Finance transaction = new Finance();
+        transaction.setSellPrice(price);
+        transaction.setType("SELL");
+        transaction.setDescription("Продажа : " + componentType + " " + componentName);
+        transaction.setBike(bike);
+        financeRepository.save(transaction);
+    }
 
 
 }
