@@ -105,6 +105,20 @@ public class BikeService {
         }
     }
 
+    @Transactional
+    public void upgradeUninstallComponent(Long id, UpgradeUninstallComponentDto dto){
+        Component component = componentService.checkComponentMatching(id,dto.getType());
+        if(component != null){
+            Bike bike = getById(id);
+            Integer sellPrice = dto.getSellPrice();
+            bike.adjustPrice(-component.getPrice());
+            bike.adjustInvest(-sellPrice);
+            financeService.uninstallTransaction(bike,sellPrice, component.getName(), component.getType());
+            componentService.deleteComponentByType(dto.getType(),id);
+
+        }
+    }
+
     public void setPrice(Long bikeId, Integer bikePrice){
         getById(bikeId).setPrice(bikePrice);
     }

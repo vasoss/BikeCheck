@@ -52,6 +52,12 @@ public class BikeController {
         return bikeService.upgradeInstallComponent(bikeId,dto);
     }
 
+    @DeleteMapping("/{bikeId}/upgrade/uninstall")
+    public void upgradeUninstallComponent(@PathVariable Long bikeId,
+                                          @RequestBody UpgradeUninstallComponentDto dto){
+        bikeService.upgradeUninstallComponent(bikeId,dto);
+    }
+
     @GetMapping
     public List<BikeDto> getUserBikes(@PathVariable Long userId){
         return bikeService.getUserBikes(userId);
